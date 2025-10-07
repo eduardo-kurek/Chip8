@@ -9,6 +9,7 @@ add_executable(Chip8 main.cpp)
 
 add_subdirectory(external/SDL)
 target_include_directories(${PROJECT_NAME} PRIVATE external/SDL/include)
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 if(WIN32)
     message(STATUS "Compilando para Windows")
@@ -22,3 +23,6 @@ endif()
 add_subdirectory(external/CLI11)
 target_include_directories(${PROJECT_NAME} PRIVATE external/CLI11/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE CLI11::CLI11)
+
+file(GLOB_RECURSE SOURCE_FILES "src/**.cpp")
+target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
