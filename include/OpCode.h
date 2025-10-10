@@ -5,12 +5,12 @@
 
 class OpCode {
 private:
-    uint8_t group, x, y, n, nn;
+    uint8_t c, x, y, n, nn;
     uint16_t nnn;
 
 public:
     OpCode(uint16_t code);
-    uint8_t Group() const;
+    uint8_t C() const;
     uint8_t X() const;
     uint8_t Y() const;
     uint8_t N() const;

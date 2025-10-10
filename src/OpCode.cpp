@@ -1,7 +1,7 @@
 #include "OpCode.h"
 
 OpCode::OpCode(uint16_t code){
-    group = code >> 12;
+    c = code >> 12;
     x = (code & 0x0F00) >> 8;
     y = (code & 0x00F0) >> 4;
     n = (code & 0x000F);
@@ -9,7 +9,7 @@ OpCode::OpCode(uint16_t code){
     nnn = (code & 0x0FFF);
 }
 
-uint8_t OpCode::Group() const { return group; }
+uint8_t OpCode::C() const { return c; }
 uint8_t OpCode::X() const { return x; }
 uint8_t OpCode::Y() const { return y; }
 uint8_t OpCode::N() const { return n; }
