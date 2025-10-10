@@ -1,8 +1,6 @@
-#pragma once
-
 #include <cstdint>
 #include <array>
-#include "../include/Memory.h"
+#include "Memory.h"
 
 uint8_t Memory::readByte(uint16_t address){
     return m_memory[address];

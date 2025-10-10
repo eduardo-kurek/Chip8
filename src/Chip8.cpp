@@ -1,8 +1,5 @@
-#pragma once 
-
-#include <../include/Chip8.h>
+#include "Chip8.h"
 #include <cstdint>
-#include <PC.cpp>
 
 Chip8::Chip8(){
 
@@ -24,14 +21,6 @@ uint16_t Chip8::fetchOpCode() {
 }
 
 void Chip8::execute(uint16_t opCode){
-    uint8_t group = opCode >> 12;
-    uint8_t X = (opCode & 0x0F00) >> 8;
-    uint8_t Y = (opCode & 0x00F0) >> 4;
-    uint8_t N = (opCode & 0x000F);
-    uint8_t N = (opCode & 0x00FF);
-    uint8_t N = (opCode & 0x0FFF);
-
-    
 
     return;
 }

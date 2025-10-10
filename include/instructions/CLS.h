@@ -3,10 +3,7 @@
 #include "instructions/Instruction.h"
 
 class CLS : public Instruction {
-    int valor;
 public:
-    CLS(Chip8& vm, int valor, int registrador) : base(vm){}
-
-    virtual void Execute() override {
-    }
+    CLS(const OpCode& opcode) : Instruction(opCode) {};
+    void Execute(Chip8& vm) const override;
 };

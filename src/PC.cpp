@@ -1,7 +1,5 @@
-#pragma once
-
 #include <cstdint>
-#include "./PC.h"
+#include "PC.h"
 
 uint16_t PC::getAddress() const { 
     return m_address;
