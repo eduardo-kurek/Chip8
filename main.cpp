@@ -3,6 +3,7 @@
 #include <iostream>
 #include <Chip8.h>
 #include <instructions/CLS.h>
+#include <instructions/RET.h>
 #include <Decoder.h>
 
 int main(int argc, char *argv[]) {
@@ -40,9 +41,10 @@ int main(int argc, char *argv[]) {
 
     Chip8 vm;
     Decoder decoder;
-    decoder.RegisterInstruction(0x0, 0x0, Instruction::Factory<CLS>());
+    decoder.Register(0xFFFF, 0x00E0, Instruction::GetFactoryOf<CLS>());
+    decoder.Register(0xFFFF, 0x00EE, Instruction::GetFactoryOf<RET>());
 
-    auto inst = decoder.Decode(0x0001);
+    auto inst = decoder.Decode(0x00EE);
     if(inst){
         inst->Execute(vm);
     }

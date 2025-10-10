@@ -22,7 +22,7 @@ public:
     virtual void Execute(Chip8& vm) const = 0;
 
     template<InstructionLike T>
-    static InstructionCreator Factory() {
+    static InstructionCreator GetFactoryOf() {
         return [](const OpCode& opcode) -> std::unique_ptr<Instruction> {
             return std::make_unique<T>(opcode);
         };

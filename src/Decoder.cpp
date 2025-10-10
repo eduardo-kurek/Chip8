@@ -1,26 +1,26 @@
 #include "Decoder.h"
+#include <bit>
+#include <cstdio>
 
-void Decoder::RegisterInstruction(uint8_t C, InstructionCreator creator){
-    this->singleInstructionGroup[C] = creator;
+
+
+void Decoder::Register(uint16_t mask, uint16_t pattern, InstructionCreator handler){
+    Entry entry(mask, pattern, handler);
+    auto index = GetMaskIndex(mask);
+    entries[index].push_back(entry);
 }
 
-void Decoder::RegisterInstruction(uint8_t C, uint8_t N, InstructionCreator creator){
-    this->multiInstructionGroup[C][N] = creator;
+uint16_t Decoder::GetMaskIndex(uint16_t mask) const{
+    return std::popcount(mask) - 1;
 }
 
 std::unique_ptr<Instruction> Decoder::Decode(const OpCode& opCode){
-    auto it = multiInstructionGroup.find(opCode.C());
-    if(it != multiInstructionGroup.end()){
-        auto it2 = it->second.find(opCode.N());
-        if(it2 != it->second.end()){
-            return it2->second(opCode);
+    for(int i = 15; i >= 0; i--){
+        for(Entry entry : entries[i]){
+            if((opCode.Code() & entry.mask) == entry.pattern){
+                return entry.handler(opCode);
+            }
         }
     }
-
-    auto it3 = singleInstructionGroup.find(opCode.C());
-    if(it3 != singleInstructionGroup.end()){
-        return it3->second(opCode);
-    }
-
     return nullptr;
 }
