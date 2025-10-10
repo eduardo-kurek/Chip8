@@ -40,9 +40,9 @@ int main(int argc, char *argv[]) {
 
     Chip8 vm;
     Decoder decoder;
-    decoder.RegisterInstruction(0x0, Instruction::Factory<CLS>());
+    decoder.RegisterInstruction(0x0, 0x0, Instruction::Factory<CLS>());
 
-    auto inst = decoder.Decode(0x0);
+    auto inst = decoder.Decode(0x0001);
     if(inst){
         inst->Execute(vm);
     }
