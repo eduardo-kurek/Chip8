@@ -1,6 +1,10 @@
 #include "instructions/RET.h"
 #include <iostream>
 
-void RET::Execute(Chip8 &vm) const{
-    std::cout << "RET" << std::endl;
+void RET::DoExecute(Context& ctx) const{
+    
+}
+
+std::string RET::GetName() const{
+    return "RET";
 }

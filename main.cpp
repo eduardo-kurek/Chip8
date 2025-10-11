@@ -1,20 +1,18 @@
 // #include <SDL.h>
-// #include <CLI/CLI.hpp>
 #include <iostream>
-#include <Chip8.h>
+#include "Context.h"
 #include <instructions/CLS.h>
 #include <instructions/RET.h>
-#include <Decoder.h>
+#include "Decoder.h"
+#include <CLI/CLI.hpp>
+#include "Memory.h"
 
 int main(int argc, char *argv[]) {
-    // CLI::App app{"Meu interpretador Chip8"};
+    CLI::App app{"Chip8 Interpreter"};
+    std::string romPath;
 
-    // std::string rom;
-    // app.add_option("rom", rom, "Caminho da ROM")->required();
-
-    // CLI11_PARSE(app, argc, argv);
-
-    // std::cout << "ROM carregada: " << rom << std::endl;
+    app.add_option("rom", romPath, "Caminho da ROM")->required();
+    app.parse(argc, argv);
 
     // SDL_Window *window;
 
@@ -39,17 +37,24 @@ int main(int argc, char *argv[]) {
     // SDL_DestroyWindow(window);
     // SDL_Quit();
 
-    Chip8 vm;
     Decoder decoder;
     decoder.Register(0xFFFF, 0x00E0, Instruction::GetFactoryOf<CLS>());
     decoder.Register(0xFFFF, 0x00EE, Instruction::GetFactoryOf<RET>());
 
-    auto inst = decoder.Decode(0x00EE);
-    if(inst){
-        inst->Execute(vm);
-    }
-    else{
-        std::cout << "Erro ao dar decode;" << std::endl;
+    Memory mem(romPath);
+    Context ctx;
+
+    for(uint32_t i = 0; i < mem.GetInstructionsCount(); i++){
+        uint16_t address = ctx.programCounter.GetAddress();
+        OpCode opcode(mem.Fetch(address));
+        auto inst = decoder.Decode(opcode);
+        if(inst)
+            inst->Execute(ctx);
+        else
+            std::cerr << "Unknown opcode: (" << std::hex << std::setfill('0') << 
+            std::setw(4) << opcode.Code() << " at address " << address <<
+            std::dec << std::setfill(' ') << ")" << std::endl;
+        ctx.programCounter.IncrementAddress();
     }
 
     return 0;
