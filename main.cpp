@@ -1,11 +1,14 @@
 // #include <SDL.h>
 #include <iostream>
 #include "Context.h"
-#include <instructions/CLS.h>
-#include <instructions/RET.h>
+
 #include "Decoder.h"
 #include <CLI/CLI.hpp>
 #include "Memory.h"
+
+#include "instructions/CLS.h"
+#include "instructions/RET.h"
+#include "instructions/JMP.h"
 
 int main(int argc, char *argv[]) {
     CLI::App app{"Chip8 Interpreter"};
@@ -40,22 +43,36 @@ int main(int argc, char *argv[]) {
     Decoder decoder;
     decoder.Register(0xFFFF, 0x00E0, Instruction::GetFactoryOf<CLS>());
     decoder.Register(0xFFFF, 0x00EE, Instruction::GetFactoryOf<RET>());
+    decoder.Register(0XF000, 0x1000, Instruction::GetFactoryOf<JMP>());
 
     Memory mem(romPath);
     Context ctx;
 
-    for(uint32_t i = 0; i < mem.GetInstructionsCount(); i++){
-        uint16_t address = ctx.programCounter.GetAddress();
-        OpCode opcode(mem.Fetch(address));
-        auto inst = decoder.Decode(opcode);
-        if(inst)
-            inst->Execute(ctx);
-        else
-            std::cerr << "Unknown opcode: (" << std::hex << std::setfill('0') << 
-            std::setw(4) << opcode.Code() << " at address " << address <<
-            std::dec << std::setfill(' ') << ")" << std::endl;
-        ctx.programCounter.IncrementAddress();
-    }
+    // for(uint32_t i = 0; i < mem.GetInstructionsCount(); i++){
+    //     uint16_t address = ctx.programCounter.GetAddress();
+    //     OpCode opcode(mem.Fetch(address));
+    //     auto inst = decoder.Decode(opcode);
+    //     if(inst)
+    //         inst->Execute(ctx);
+    //     else
+    //         std::cerr << "Unknown opcode: (" << std::hex << std::setfill('0') << 
+    //         std::setw(4) << opcode.Code() << " at address " << address <<
+    //         std::dec << std::setfill(' ') << ")" << std::endl;
+    //     ctx.programCounter.IncrementAddress();
+    // }
+
+    std::cout << ctx;
+
+    OpCode opcode(0x1234);
+    auto inst = decoder.Decode(opcode);
+    if(inst)
+        inst->Execute(ctx);
+    else
+        std::cerr << "Unknown opcode: (" << std::hex << std::setfill('0') << 
+        std::setw(4) << opcode.Code() <<
+        std::dec << std::setfill(' ') << ")" << std::endl;
+
+    std::cout << ctx;
 
     return 0;
 }
