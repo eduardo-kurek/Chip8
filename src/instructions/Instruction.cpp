@@ -18,6 +18,4 @@ void Instruction::PrintExecutionDebugInfo(const Context& ctx) const{
     #endif
 }
 
-std::string Instruction::GetName() const{
-    return "Unnamed";
-}
+std::string Instruction::GetName() const{ return "Unnamed"; }

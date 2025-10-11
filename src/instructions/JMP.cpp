@@ -5,6 +5,4 @@ void JMP::DoExecute(Context& ctx) const{
     ctx.programCounter.SetAddress(opCode.NNN());
 }
 
-std::string JMP::GetName() const{
-    return "JMP";
-}
+std::string JMP::GetName() const{ return "JMP"; }

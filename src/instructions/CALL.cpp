@@ -1,10 +1,10 @@
-#include "instructions/CLS.h"
+#include "instructions/CALL.h"
 #include <cstdio>
 
-void CLS::DoExecute(Context& ctx) const{
-    ctx.DISPLAY.fill(0);
+void CALL::DoExecute(Context& ctx) const{
+    ctx.stackPointer++;
+    ctx.stack[ctx.stackPointer] = ctx.programCounter.GetAddress();
+    ctx.programCounter.SetAddress(opCode.NNN());
 }
 
-std::string CLS::GetName() const{
-    return "CLS";
-}
+std::string CALL::GetName() const{ return "CALL"; }
