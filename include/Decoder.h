@@ -5,7 +5,8 @@
 #include <vector>
 
 class Decoder {
-
+    static Decoder* instance;
+    
     struct Entry {
         uint16_t mask;
         uint16_t pattern;
@@ -17,13 +18,15 @@ class Decoder {
             this->handler = handler;
         }
     };
-
+    
     uint16_t GetMaskIndex(uint16_t mask) const;
-
     std::vector<Entry> entries[16];
-
-public:
     Decoder() = default;
     void Register(uint16_t mask, uint16_t pattern, InstructionCreator handler);
-    std::unique_ptr<Instruction> Decode(const OpCode& opCode);
+    void Initialize();
+
+    
+public:
+    std::unique_ptr<Instruction> Decode(const OpCode& opCode) const;
+    static const Decoder& Instance();
 };

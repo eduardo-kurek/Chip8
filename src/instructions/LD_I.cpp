@@ -1,8 +1,9 @@
 #include "instructions/LD_I.h"
+#include "VirtualMachine.h"
 #include <cstdio>
 
-void LD_I::DoExecute(Context& ctx) const{
-    ctx.I = ctx.V[opCode.NNN()];
+void LD_I::DoExecute(VirtualMachine& vm) const{
+    vm.I = vm.V[opCode.NNN()];
 }
 
 std::string LD_I::GetName() const{ return "LD_I"; }

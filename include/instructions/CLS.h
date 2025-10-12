@@ -4,7 +4,7 @@
 
 class CLS : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     CLS(const OpCode& opCode) : Instruction(opCode) {};

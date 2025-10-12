@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GraphicEngine.h"
 #include <SDL.h>
+#include "GraphicEngine.h"
 
 class SDL2Engine : public GraphicEngine {
 private:
@@ -11,9 +11,9 @@ private:
     bool running = true;
 
 public:
-    SDL2Engine(uint16_t width, uint16_t height, uint8_t scale);
+    SDL2Engine(const Display& display, uint8_t scale);
     virtual bool IsRunning() override;
-    virtual void Render(uint8_t display[64][32]) override;
+    virtual void Render() override;
     virtual void Sync() override;
     ~SDL2Engine() override;
 };

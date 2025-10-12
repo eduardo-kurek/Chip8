@@ -3,10 +3,11 @@
 #include <functional>
 #include <memory>
 #include <concepts>
-#include "Context.h"
 #include "OpCode.h"
 
+class VirtualMachine;
 class Instruction;
+
 using InstructionCreator = std::function<std::unique_ptr<Instruction>(const OpCode&)>;
 
 template<typename T>
@@ -17,12 +18,12 @@ concept InstructionLike =
 class Instruction {
 protected:
     OpCode opCode;
-    virtual void DoExecute(Context& ctx) const = 0;
-    void PrintExecutionDebugInfo(const Context& ctx) const;
+    virtual void DoExecute(VirtualMachine& vm) const = 0;
+    void PrintExecutionDebugInfo(const VirtualMachine& vm) const;
 
 public:
     Instruction(const OpCode& opCode) : opCode(opCode) {}
-    void Execute(Context& ctx) const;
+    void Execute(VirtualMachine& vm) const;
     virtual std::string GetName() const;
 
     template<InstructionLike T>

@@ -1,8 +1,9 @@
 #include "instructions/CLS.h"
+#include "VirtualMachine.h"
 #include <cstdio>
 
-void CLS::DoExecute(Context& ctx) const{
-    ctx.DISPLAY.fill(0);
+void CLS::DoExecute(VirtualMachine& vm) const{
+    vm.display.Clear();
 }
 
 std::string CLS::GetName() const{ return "CLS"; }

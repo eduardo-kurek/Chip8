@@ -1,8 +1,9 @@
 #include "instructions/RET.h"
+#include "VirtualMachine.h"
 #include <iostream>
 
-void RET::DoExecute(Context& ctx) const{
-    ctx.programCounter.SetAddress(ctx.stack[ctx.stackPointer]);
+void RET::DoExecute(VirtualMachine& vm) const{
+    vm.programCounter.SetAddress(vm.stack[vm.stackPointer]);
 }
 
 std::string RET::GetName() const{ return "RET"; }
