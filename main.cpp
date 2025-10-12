@@ -3,8 +3,9 @@
 #include "Context.h"
 
 #include "Decoder.h"
-#include <CLI/CLI.hpp>
+// #include <CLI/CLI.hpp>
 #include "Memory.h"
+#include "SDL2Engine.h"
 
 #include "instructions/CLS.h"
 #include "instructions/RET.h"
@@ -29,29 +30,21 @@
 #include "instructions/JMP_V0.h"
 #include "instructions/RND.h"
 
-void wait_for_input() {
-    std::cout << "Pressione ENTER para continuar..." << std::endl;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
+#define CHIP8_WIDTH 64
+#define CHIP8_HEIGHT 32
+#define SCALE 10
+
+uint8_t display[CHIP8_WIDTH][CHIP8_HEIGHT];
 
 int main(int argc, char *argv[]) {
+    
+    SDL2Engine engine(CHIP8_WIDTH, CHIP8_HEIGHT, SCALE);
 
-        if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        SDL_Log("Erro SDL_Init: %s", SDL_GetError());
-        return -1;
+    while(engine.IsRunning()){
+        engine.Render(display);
+        engine.Sync();
     }
 
-    SDL_Window* window = SDL_CreateWindow("Teste", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
-    if (!window) {
-        SDL_Log("Erro ao criar janela: %s", SDL_GetError());
-        SDL_Quit();
-        return -1;
-    }
-
-    SDL_Delay(5000); // Mantém a janela aberta por 5 segundos
-
-    SDL_DestroyWindow(window);
-    SDL_Quit();
     return 0;
 
 
