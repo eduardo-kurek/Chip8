@@ -3,7 +3,10 @@
 #include "instructions/Instruction.h"
 
 class RET : public Instruction {
+protected:
+    void DoExecute(Context& ctx) const override;
+
 public:
-    RET(const OpCode& opcode) : Instruction(opCode) {};
-    void Execute(Chip8& vm) const override;
+    RET(const OpCode& opCode) : Instruction(opCode) {};
+    std::string GetName() const override;
 };

@@ -3,7 +3,7 @@
 #include <functional>
 #include <memory>
 #include <concepts>
-#include "Chip8.h"
+#include "Context.h"
 #include "OpCode.h"
 
 class Instruction;
@@ -17,9 +17,13 @@ concept InstructionLike =
 class Instruction {
 protected:
     OpCode opCode;
+    virtual void DoExecute(Context& ctx) const = 0;
+    void PrintExecutionDebugInfo(const Context& ctx) const;
+
 public:
     Instruction(const OpCode& opCode) : opCode(opCode) {}
-    virtual void Execute(Chip8& vm) const = 0;
+    void Execute(Context& ctx) const;
+    virtual std::string GetName() const;
 
     template<InstructionLike T>
     static InstructionCreator GetFactoryOf() {

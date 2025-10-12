@@ -2,11 +2,11 @@
 
 #include "instructions/Instruction.h"
 
-class CLS : public Instruction {
+class AND_R : public Instruction {
 protected:
     void DoExecute(Context& ctx) const override;
 
 public:
-    CLS(const OpCode& opCode) : Instruction(opCode) {};
+    AND_R(const OpCode& opCode) : Instruction(opCode) {};
     std::string GetName() const override;
 };
