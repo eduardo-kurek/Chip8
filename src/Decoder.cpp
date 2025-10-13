@@ -27,6 +27,15 @@
 #include "instructions/DRW.h"
 #include "instructions/SKP.h"
 #include "instructions/SKPN.h"
+#include "instructions/LD_DT_R.h"
+#include "instructions/LD_K.h"
+#include "instructions/LD_R_DT.h"
+#include "instructions/LD_R_ST.h"
+#include "instructions/ADD_I.h"
+#include "instructions/LD_I_R.h"
+#include "instructions/LD_B.h"
+#include "instructions/LD_I_Rs.h"
+#include "instructions/LD_Rs_I.h"
 
 Decoder* Decoder::instance = nullptr;
 
@@ -76,6 +85,15 @@ void Decoder::Initialize(){
 
     Register(0xF0FF, 0xE09E, Instruction::GetFactoryOf<SKP>());
     Register(0xF0FF, 0xE0A1, Instruction::GetFactoryOf<SKPN>());
+    Register(0xF0FF, 0XF007, Instruction::GetFactoryOf<LD_DT_R>());
+    Register(0xF0FF, 0XF00A, Instruction::GetFactoryOf<LD_K>());
+    Register(0xF0FF, 0XF015, Instruction::GetFactoryOf<LD_R_DT>());
+    Register(0xF0FF, 0XF018, Instruction::GetFactoryOf<LD_R_ST>());
+    Register(0xF0FF, 0XF01E, Instruction::GetFactoryOf<ADD_I>());
+    Register(0xF0FF, 0XF029, Instruction::GetFactoryOf<LD_I_R>());
+    Register(0xF0FF, 0XF033, Instruction::GetFactoryOf<LD_B>());
+    Register(0xF0FF, 0XF055, Instruction::GetFactoryOf<LD_I_Rs>());
+    Register(0xF0FF, 0XF065, Instruction::GetFactoryOf<LD_Rs_I>());
 
 }
 

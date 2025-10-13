@@ -23,6 +23,7 @@ std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
 }
 
 void VirtualMachine::ExecuteNextInstruction(){
+    if(waitingForInput) return;
     uint16_t address = programCounter.GetAddress();
     OpCode opCode(mem.FetchInstruction(address));
     programCounter.IncrementAddress();
@@ -30,6 +31,7 @@ void VirtualMachine::ExecuteNextInstruction(){
 }
 
 void VirtualMachine::Execute(const OpCode& opCode){
+    if(waitingForInput) return;
     uint16_t address = programCounter.GetAddress();
     auto inst = decoder.Decode(opCode);
     if(inst)
@@ -47,6 +49,9 @@ void VirtualMachine::PressKey(uint8_t key){
         std::cout << "Key pressed: " << (int)key << std::endl;
     #endif
     keys[key] = true;
+
+    if(waitingForInput)
+        InputReceived(key);
 }
 
 void VirtualMachine::ReleaseKey(uint8_t key){
@@ -56,4 +61,18 @@ void VirtualMachine::ReleaseKey(uint8_t key){
         std::cout << "Key released: " << (int)key << std::endl;
     #endif
     keys[key] = false;
+}
+
+void VirtualMachine::WaitForInput(OnInputReceived callback){
+    waitingForInput = true;
+    this->callback = callback;
+}
+
+bool VirtualMachine::NotWaitingForInput() const{ return !waitingForInput; }
+
+void VirtualMachine::InputReceived(uint8_t key){
+    waitingForInput = false;
+    if(callback)
+        callback(key);
+    callback = nullptr;
 }

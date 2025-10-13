@@ -59,6 +59,14 @@ uint16_t Memory::FetchInstruction(uint16_t address){
     return (mem[address] << 8) | mem[address + 1];
 }
 
+void Memory::WriteMem(uint16_t pos, uint8_t value){
+    mem.at(pos) = value;
+}
+
+uint8_t Memory::GetMem(uint16_t pos){
+    return mem.at(pos);
+}
+
 uint8_t Memory::At(uint16_t address){ return mem[address]; }
 uint16_t Memory::GetRomSize() const{ return romSize; }
 uint16_t Memory::GetInstructionsCount() const{ return romSize / 2; }
