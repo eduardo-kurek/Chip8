@@ -1,9 +1,11 @@
 #include "VirtualMachine.h"
 #include "Decoder.h"
+#include <exception>
 #include <cstdint>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <cstdio>
 
 std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     os << "Virtual Machine State:\n";
@@ -16,7 +18,7 @@ std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     os << "Stack: ";
     for(int i = 0; i < vm.stack.size(); ++i)
     os << std::hex << vm.stack[i] << " ";
-    os << "SP: " << std::hex << static_cast<int>(vm.stackPointer) << "\n";
+    os << "SP: " << std::hex << static_cast<int>(vm.stackPointer) << "\n" << std::dec;
     return os;
 }
 
@@ -36,4 +38,22 @@ void VirtualMachine::Execute(const OpCode& opCode){
         std::cerr << "Unknown opcode: (" << std::hex << std::setfill('0') << 
         std::setw(4) << opCode.Code() << " at address " << address <<
         std::dec << std::setfill(' ') << ")" << std::endl;
+}
+
+void VirtualMachine::PressKey(uint8_t key){
+    if(key > 15)
+        throw std::out_of_range("Key out of range");
+    #ifdef DEBUG
+        std::cout << "Key pressed: " << (int)key << std::endl;
+    #endif
+    keys[key] = true;
+}
+
+void VirtualMachine::ReleaseKey(uint8_t key){
+    if(key > 15)
+        throw std::out_of_range("Key out of range");
+    #ifdef DEBUG
+        std::cout << "Key released: " << (int)key << std::endl;
+    #endif
+    keys[key] = false;
 }

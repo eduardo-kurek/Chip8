@@ -17,6 +17,7 @@ public:
     PC programCounter;
     std::array<uint16_t, 16> stack{};
     uint8_t stackPointer = 0x00;
+    std::array<bool, 16> keys;
     Display display;
     Memory mem;
     const Decoder& decoder;
@@ -24,5 +25,7 @@ public:
     VirtualMachine(std::string romPath) : mem(romPath), decoder(Decoder::Instance()) {};
     void ExecuteNextInstruction();
     void Execute(const OpCode& opCode);
+    void PressKey(uint8_t key);
+    void ReleaseKey(uint8_t key);
     friend std::ostream& operator<<(std::ostream& os, const VirtualMachine& vm);
 };
