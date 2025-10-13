@@ -3,7 +3,7 @@
 #include <cstdio>
 
 void LD_I::DoExecute(VirtualMachine& vm) const{
-    vm.I = vm.V[opCode.NNN()];
+    vm.I = opCode.NNN();
 }
 
 std::string LD_I::GetName() const{ return "LD_I"; }

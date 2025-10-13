@@ -17,19 +17,23 @@ std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     for(int i = 0; i < vm.stack.size(); ++i)
     os << std::hex << vm.stack[i] << " ";
     os << "SP: " << std::hex << static_cast<int>(vm.stackPointer) << "\n";
-    os << "\n";
     return os;
 }
 
 void VirtualMachine::ExecuteNextInstruction(){
     uint16_t address = programCounter.GetAddress();
-    OpCode opcode(mem.Fetch(address));
+    OpCode opCode(mem.FetchInstruction(address));
     programCounter.IncrementAddress();
-    auto inst = decoder.Decode(opcode);
+    Execute(std::move(opCode));
+}
+
+void VirtualMachine::Execute(const OpCode& opCode){
+    uint16_t address = programCounter.GetAddress();
+    auto inst = decoder.Decode(opCode);
     if(inst)
         inst->Execute(*this);
     else
         std::cerr << "Unknown opcode: (" << std::hex << std::setfill('0') << 
-        std::setw(4) << opcode.Code() << " at address " << address <<
+        std::setw(4) << opCode.Code() << " at address " << address <<
         std::dec << std::setfill(' ') << ")" << std::endl;
 }

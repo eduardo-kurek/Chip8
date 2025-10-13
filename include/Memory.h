@@ -14,7 +14,8 @@ private:
 
 public:
     Memory(const std::string& romPath);
-    uint16_t Fetch(uint16_t address);
+    uint16_t FetchInstruction(uint16_t address);
+    uint8_t At(uint16_t address);
     uint16_t GetRomSize() const;
     uint16_t GetInstructionsCount() const;
 };

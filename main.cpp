@@ -13,10 +13,18 @@
 
 int main(int argc, char *argv[]) {
 
-    VirtualMachine vm("IBM Logo.ch8");
+    VirtualMachine vm("1-chip8-logo.ch8");
     SDL2Engine engine(vm.display, SCALE);
 
-    vm.ExecuteNextInstruction();
+
+    while (true)
+    {
+        //std::cout << vm << "INSTRUÇÃO " << i << ":";
+        vm.ExecuteNextInstruction();
+        //std::cout << vm << std::endl;
+        engine.Render();
+    }
+    
 
     // while(engine.IsRunning()){
     //     vm.ExecuteNextInstruction();

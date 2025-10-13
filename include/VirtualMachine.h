@@ -10,6 +10,7 @@
 #include "Decoder.h"
 
 class VirtualMachine {
+
 public:
     std::array<uint8_t, 16> V{};
     uint16_t I = 0x0000;
@@ -22,5 +23,6 @@ public:
 
     VirtualMachine(std::string romPath) : mem(romPath), decoder(Decoder::Instance()) {};
     void ExecuteNextInstruction();
+    void Execute(const OpCode& opCode);
     friend std::ostream& operator<<(std::ostream& os, const VirtualMachine& vm);
 };

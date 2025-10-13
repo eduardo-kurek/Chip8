@@ -24,6 +24,7 @@
 #include "instructions/LD_I.h"
 #include "instructions/JMP_V0.h"
 #include "instructions/RND.h"
+#include "instructions/DRW.h"
 
 Decoder* Decoder::instance = nullptr;
 
@@ -68,6 +69,8 @@ void Decoder::Initialize(){
     Register(0xF000, 0xB000, Instruction::GetFactoryOf<JMP_V0>());
 
     Register(0xF000, 0xC000, Instruction::GetFactoryOf<RND>());
+
+    Register(0xF000, 0xD000, Instruction::GetFactoryOf<DRW>());
 
 }
 
