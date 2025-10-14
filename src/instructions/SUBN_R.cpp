@@ -10,7 +10,6 @@ void SUBN_R::DoExecute(VirtualMachine& vm) const{
     vm.V[opCode.X()] = (uint8_t)sub;
 
     vm.V[0xF] = notBorrowFlag;
-        
 }
 
 std::string SUBN_R::GetName() const{ return "SUBN_R"; }
