@@ -3,8 +3,8 @@
 #include <cstdio>
 
 void CALL::DoExecute(VirtualMachine& vm) const{
-    vm.stackPointer++;
     vm.stack[vm.stackPointer] = vm.programCounter.GetAddress();
+    vm.stackPointer++;
     vm.programCounter.SetAddress(opCode.NNN());
 }
 

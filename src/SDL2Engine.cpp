@@ -91,7 +91,7 @@ void SDL2Engine::Render(){
 }
 
 void SDL2Engine::Sync(){
-    SDL_Delay(32);  // ~30 FPS
+    SDL_Delay(16);  // ~30 FPS
 }
 
 bool SDL2Engine::Quitted(){ return quitted; }

@@ -85,6 +85,7 @@ void Decoder::Initialize(){
 
     Register(0xF0FF, 0xE09E, Instruction::GetFactoryOf<SKP>());
     Register(0xF0FF, 0xE0A1, Instruction::GetFactoryOf<SKPN>());
+    
     Register(0xF0FF, 0XF007, Instruction::GetFactoryOf<LD_DT_R>());
     Register(0xF0FF, 0XF00A, Instruction::GetFactoryOf<LD_K>());
     Register(0xF0FF, 0XF015, Instruction::GetFactoryOf<LD_R_DT>());

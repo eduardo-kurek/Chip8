@@ -3,6 +3,7 @@
 #include <iostream>
 
 void RET::DoExecute(VirtualMachine& vm) const{
+    vm.stackPointer--;
     vm.programCounter.SetAddress(vm.stack[vm.stackPointer]);
 }
 
