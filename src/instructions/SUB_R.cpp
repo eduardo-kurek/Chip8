@@ -3,13 +3,13 @@
 #include <cstdio>
 
 void SUB_R::DoExecute(VirtualMachine& vm) const{
-    if (vm.V[opCode.X()] > vm.V[opCode.Y()])
-        vm.V[0xF] = 1;  
-    else
-        vm.V[0xF] = 0;
-    
     uint16_t sub = vm.V[opCode.X()] - vm.V[opCode.Y()];
+    
+    uint8_t notBorrowFlag = (vm.V[opCode.X()] >= vm.V[opCode.Y()]) ? 1 : 0;
+
     vm.V[opCode.X()] = (uint8_t)sub;
+
+    vm.V[0xF] = notBorrowFlag;
 }
 
 std::string SUB_R::GetName() const{ return "SUB_R"; }
