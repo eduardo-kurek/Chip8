@@ -1,6 +1,10 @@
 #include "instructions/RET.h"
+#include "VirtualMachine.h"
 #include <iostream>
 
-void RET::Execute(Chip8 &vm) const{
-    std::cout << "RET" << std::endl;
+void RET::DoExecute(VirtualMachine& vm) const{
+    vm.stackPointer--;
+    vm.programCounter.SetAddress(vm.stack[vm.stackPointer]);
 }
+
+std::string RET::GetName() const{ return "RET"; }

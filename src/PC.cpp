@@ -1,14 +1,14 @@
 #include <cstdint>
 #include "PC.h"
 
-uint16_t PC::getAddress() const { 
-    return m_address;
+uint16_t PC::GetAddress() const {
+    return address;
 }
 
-void PC::setAddress(uint16_t newAddress) {
-    m_address = newAddress;
+void PC::SetAddress(uint16_t newAddress){
+    address = newAddress;
 }
 
-void PC::incrementAdress() {
-    m_address += 2;
+void PC::IncrementAddress(){
+    address += 2;
 }

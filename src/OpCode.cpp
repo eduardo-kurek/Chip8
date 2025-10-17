@@ -1,6 +1,7 @@
 #include "OpCode.h"
 
 OpCode::OpCode(uint16_t code){
+    this->code = code;
     c = code >> 12;
     x = (code & 0x0F00) >> 8;
     y = (code & 0x00F0) >> 4;
@@ -15,3 +16,4 @@ uint8_t OpCode::Y() const { return y; }
 uint8_t OpCode::N() const { return n; }
 uint8_t OpCode::NN() const { return nn; }
 uint16_t OpCode::NNN() const { return nnn; }
+uint16_t OpCode::Code() const { return code; }

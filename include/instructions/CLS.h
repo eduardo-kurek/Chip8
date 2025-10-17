@@ -3,7 +3,10 @@
 #include "instructions/Instruction.h"
 
 class CLS : public Instruction {
+protected:
+    void DoExecute(VirtualMachine& vm) const override;
+
 public:
-    CLS(const OpCode& opcode) : Instruction(opCode) {};
-    void Execute(Chip8& vm) const override;
+    CLS(const OpCode& opCode) : Instruction(opCode) {};
+    std::string GetName() const override;
 };
