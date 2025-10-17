@@ -29,10 +29,8 @@ int main(int argc, char* argv[]){
     SDL2Engine engine(vm, scale);
     
 
-    while(true){
+    while(engine.IsRunning()){
         engine.HandleEvents();
-        if(engine.Quitted())
-            break;
 
         if(vm.NotWaitingForInput())
             vm.ExecuteNextInstruction();

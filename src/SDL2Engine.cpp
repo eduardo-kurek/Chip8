@@ -23,51 +23,44 @@ SDL2Engine::SDL2Engine(VirtualMachine &vm, uint8_t scale)
 }
 
 void SDL2Engine::HandleEvents(){
-    SDL_Event event;
-
     while(SDL_PollEvent(&event)){
         switch (event.type){
-
-            case SDL_QUIT: Quit(); return;
-
-            case SDL_KEYUP: {
-                auto code = GetKeyCode(event);
-                auto key = GetKey(code);
-                if(key)
-                    vm.ReleaseKey(key.value());
-                break;
-            }
-
-            case SDL_KEYDOWN: {
-                auto code = GetKeyCode(event);
-                if(code == SDLK_ESCAPE){
-                    Quit();
-                    return;
-                }
-                
-                auto key = GetKey(code);
-                if(key)
-                    vm.PressKey(key.value());
-                break;
-            }
-            
-            default:
-                break;
+            case SDL_QUIT: Quit(); break;
+            case SDL_KEYUP: HandleKeyUp(); break;
+            case SDL_KEYDOWN: HandleKeyDown(); break;
+            default: break;
         }
     }
 }
 
-void SDL2Engine::Quit(){
-    quitted = true;
+void SDL2Engine::Quit(){ isRunning = false; }
+
+void SDL2Engine::HandleKeyDown(){
+    auto code = GetCurrentKeyCode();
+    if(code == SDLK_ESCAPE){
+        Quit();
+        return;
+    }
+    
+    auto key = GetCurrentKey();
+    if(key)
+        vm.PressKey(key.value());
 }
 
-SDL_KeyCode SDL2Engine::GetKeyCode(const SDL_Event &event){
+void SDL2Engine::HandleKeyUp(){
+    auto key = GetCurrentKey();
+    if(key)
+        vm.ReleaseKey(key.value());
+}
+
+SDL_KeyCode SDL2Engine::GetCurrentKeyCode() const{
     return (SDL_KeyCode)event.key.keysym.sym;
 }
 
-std::optional<uint8_t> SDL2Engine::GetKey(const SDL_KeyCode& code) const{
-    if(keyMap.contains(code))
-        return keyMap.at(code);
+std::optional<uint8_t> SDL2Engine::GetCurrentKey() const{
+    auto keyCode = GetCurrentKeyCode();
+    if(keyMap.contains(keyCode))
+        return keyMap.at(keyCode);
     return {};
 }
 
@@ -91,10 +84,10 @@ void SDL2Engine::Render(){
 }
 
 void SDL2Engine::Sync(){
-    SDL_Delay(1);  // ~30 FPS
+    SDL_Delay(8);  // ~30 FPS
 }
 
-bool SDL2Engine::Quitted(){ return quitted; }
+bool SDL2Engine::IsRunning(){ return isRunning; }
 
 SDL2Engine::~SDL2Engine(){
     SDL_DestroyTexture(texture);

@@ -15,6 +15,6 @@ public:
     virtual void HandleEvents() = 0;
     virtual void Render() = 0;
     virtual void Sync() = 0;
-    virtual bool Quitted() = 0;
+    virtual bool IsRunning() = 0;
     virtual ~GraphicEngine() = default;
 };

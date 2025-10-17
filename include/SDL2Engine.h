@@ -11,7 +11,8 @@ private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Texture* texture;
-    bool quitted = false;
+    SDL_Event event;
+    bool isRunning = true;
     
 
     const std::unordered_map<SDL_KeyCode, uint8_t> keyMap = {
@@ -22,14 +23,16 @@ private:
     };
     
     void Quit();
-    SDL_KeyCode GetKeyCode(const SDL_Event& event);
-    std::optional<uint8_t> GetKey(const SDL_KeyCode& code) const;
+    void HandleKeyDown();
+    void HandleKeyUp();
+    SDL_KeyCode GetCurrentKeyCode() const;
+    std::optional<uint8_t> GetCurrentKey() const;
     
 public:
     SDL2Engine(VirtualMachine& vm, uint8_t scale);
     virtual void HandleEvents() override;
     virtual void Render() override;
     virtual void Sync() override;
-    virtual bool Quitted() override;
+    virtual bool IsRunning() override;
     ~SDL2Engine() override;
 };
