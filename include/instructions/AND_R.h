@@ -2,9 +2,11 @@
 
 #include "instructions/Instruction.h"
 
+class VirtualMachine;
+
 class AND_R : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     AND_R(const OpCode& opCode) : Instruction(opCode) {};

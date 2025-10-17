@@ -1,13 +1,16 @@
 #include "instructions/ADD_R.h"
+#include "VirtualMachine.h"
 #include <cstdio>
 
-void ADD_R::DoExecute(Context& ctx) const{
-    if (ctx.V[opCode.X()] + ctx.V[opCode.Y()] > 0xFF)
-        ctx.V[0xF] = 1;  
-    else
-        ctx.V[0xF] = 0;
+void ADD_R::DoExecute(VirtualMachine& vm) const{
+    uint16_t sum = vm.V[opCode.X()] + vm.V[opCode.Y()];
 
-    ctx.V[opCode.X()] += ctx.V[opCode.Y()];
+    uint8_t carryFlag = (sum > 0xFF) ? 1 : 0; 
+
+    vm.V[opCode.X()] = (uint8_t)sum;
+    
+    vm.V[0xF] = carryFlag;
 }
+
 
 std::string ADD_R::GetName() const{ return "ADD_R"; }

@@ -4,7 +4,7 @@
 
 class JMP_V0 : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     JMP_V0(const OpCode& opCode) : Instruction(opCode) {};

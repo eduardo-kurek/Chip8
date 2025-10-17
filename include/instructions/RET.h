@@ -4,7 +4,7 @@
 
 class RET : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     RET(const OpCode& opCode) : Instruction(opCode) {};

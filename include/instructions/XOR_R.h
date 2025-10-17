@@ -4,7 +4,7 @@
 
 class XOR_R : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     XOR_R(const OpCode& opCode) : Instruction(opCode) {};

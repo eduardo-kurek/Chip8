@@ -1,18 +1,20 @@
 #pragma once
 
 #include <cstdint>
+#include "Display.h"
+#include "VirtualMachine.h"
 
 class GraphicEngine {
 protected:
-    uint16_t width;
-    uint16_t height;
     uint8_t scale;
+    VirtualMachine& vm;
 
 public:
-    GraphicEngine(uint16_t width, uint16_t height, uint8_t scale)
-        : width(width), height(height), scale(scale) {}
-    virtual bool IsRunning() = 0;
-    virtual void Render(uint8_t display[64][32]) = 0;
+    GraphicEngine(VirtualMachine& vm, uint8_t scale) 
+        : scale(scale), vm(vm) {}
+    virtual void HandleEvents() = 0;
+    virtual void Render() = 0;
     virtual void Sync() = 0;
+    virtual bool Quitted() = 0;
     virtual ~GraphicEngine() = default;
 };

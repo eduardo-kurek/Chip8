@@ -4,7 +4,7 @@
 
 class ADD_N : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     ADD_N(const OpCode& opCode) : Instruction(opCode) {};

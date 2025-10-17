@@ -1,0 +1,78 @@
+#include "VirtualMachine.h"
+#include "Decoder.h"
+#include <exception>
+#include <cstdint>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <cstdio>
+
+std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
+    os << "Virtual Machine State:\n";
+    os << "PC: " << std::hex << vm.programCounter.GetAddress() << "\n";
+    os << "I: " << std::hex << vm.I << "\n";
+    os << "Registers: ";
+    for(int i = 0; i < vm.V.size(); ++i)
+    os << std::hex << static_cast<int>(vm.V[i]) << " ";
+    os << "\n";
+    os << "Stack: ";
+    for(int i = 0; i < vm.stack.size(); ++i)
+    os << std::hex << vm.stack[i] << " ";
+    os << "SP: " << std::hex << static_cast<int>(vm.stackPointer) << "\n" << std::dec;
+    return os;
+}
+
+void VirtualMachine::ExecuteNextInstruction(){
+    if(waitingForInput) return;
+    uint16_t address = programCounter.GetAddress();
+    OpCode opCode(mem.FetchInstruction(address));
+    programCounter.IncrementAddress();
+    Execute(std::move(opCode));
+}
+
+void VirtualMachine::Execute(const OpCode& opCode){
+    if(waitingForInput) return;
+    uint16_t address = programCounter.GetAddress();
+    auto inst = decoder.Decode(opCode);
+    if(inst)
+        inst->Execute(*this);
+    else
+        std::cerr << "Unknown opcode: (" << std::hex << std::setfill('0') << 
+        std::setw(4) << opCode.Code() << " at address " << address <<
+        std::dec << std::setfill(' ') << ")" << std::endl;
+}
+
+void VirtualMachine::PressKey(uint8_t key){
+    if(key > 15)
+        throw std::out_of_range("Key out of range");
+    #ifdef DEBUG
+        std::cout << "Key pressed: " << (int)key << std::endl;
+    #endif
+    keys[key] = true;
+
+    if(waitingForInput)
+        InputReceived(key);
+}
+
+void VirtualMachine::ReleaseKey(uint8_t key){
+    if(key > 15)
+        throw std::out_of_range("Key out of range");
+    #ifdef DEBUG
+        std::cout << "Key released: " << (int)key << std::endl;
+    #endif
+    keys[key] = false;
+}
+
+void VirtualMachine::WaitForInput(OnInputReceived callback){
+    waitingForInput = true;
+    this->callback = callback;
+}
+
+bool VirtualMachine::NotWaitingForInput() const{ return !waitingForInput; }
+
+void VirtualMachine::InputReceived(uint8_t key){
+    waitingForInput = false;
+    if(callback)
+        callback(key);
+    callback = nullptr;
+}

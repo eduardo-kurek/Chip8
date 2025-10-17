@@ -4,7 +4,7 @@
 
 class RND : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     RND(const OpCode& opCode) : Instruction(opCode) {};

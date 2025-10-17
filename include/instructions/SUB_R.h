@@ -4,7 +4,7 @@
 
 class SUB_R : public Instruction {
 protected:
-    void DoExecute(Context& ctx) const override;
+    void DoExecute(VirtualMachine& vm) const override;
 
 public:
     SUB_R(const OpCode& opCode) : Instruction(opCode) {};
