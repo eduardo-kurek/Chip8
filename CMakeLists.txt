@@ -37,7 +37,4 @@ endif()
 
 file(COPY ${CMAKE_SOURCE_DIR}/roms DESTINATION ${CMAKE_BINARY_DIR})
 
-# Adiciona o CLI11 (exemplo de outro submodule)
-add_subdirectory(external/CLI11)
-target_include_directories(${PROJECT_NAME} PRIVATE external/CLI11/include)
-target_link_libraries(${PROJECT_NAME} PRIVATE CLI11::CLI11)
+target_include_directories(${PROJECT_NAME} PRIVATE external/argparse/include)

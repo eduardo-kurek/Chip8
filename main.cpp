@@ -1,29 +1,38 @@
-#include <SDL.h>
+#include <argparse/argparse.hpp>
 #include <iostream>
 #include "VirtualMachine.h"
-
-#include "Decoder.h"
-#include <CLI/CLI.hpp>
-#include "Memory.h"
 #include "SDL2Engine.h"
 
 int main(int argc, char* argv[]){
 
-    std::string romPath = "";
-    uint8_t scale = 13;
-    uint16_t clock = 500;
+    argparse::ArgumentParser program("Chip8", "1.0");
 
-    CLI::App app{"Chip8"};
-    
-    app.add_option("ROM_PATH", romPath, "Chip8 ROM file location")->required();
-    app.add_option("-s,--scale", scale, "Default = 13. Amount of times the screen will be multiplied by")->check(CLI::Range(1,30));
-    app.add_option("-c,--clock", clock, "Default = 500Hz. Amount of instructions the program will run each seconds in Hertz.")->check(CLI::Range(1, 5000));
+    program.add_argument("ROM_PATH")
+        .help("Chip8 ROM file location")
+        .required();
+
+    program.add_argument("-s", "--scale")
+        .help("Amount of times the screen will be multiplied by")
+        .default_value(13)
+        .scan<'i', int>();
+
+    program.add_argument("-c", "--clock")
+        .help("Amount of instructions the program will run each second")
+        .default_value(500)
+        .scan<'i', int>();
+
 
     try {
-        app.parse(argc, argv);
-    } catch (const CLI::ParseError &e) {
-        return app.exit(e);
+        program.parse_args(argc, argv);
+    } catch (const std::exception& err) {
+        std::cerr << err.what() << std::endl;
+        std::cerr << program;
+        return 1;
     }
+
+    const auto& romPath = program.get<std::string>("ROM_PATH");
+    int scale = program.get<int>("--scale");
+    int clock = program.get<int>("-c");
 
     VirtualMachine vm(romPath);
     SDL2Engine engine(vm, scale);
@@ -32,8 +41,9 @@ int main(int argc, char* argv[]){
     while(engine.IsRunning()){
         engine.HandleEvents();
 
-        if(vm.NotWaitingForInput())
-            vm.ExecuteNextInstruction();
+        for(int i = 0; i < clock / 60; i++)
+            if(vm.NotWaitingForInput())
+                vm.ExecuteNextInstruction();
         
         vm.delayTimer.Update();
         vm.soundTimer.Update();
