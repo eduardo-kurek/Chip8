@@ -3,8 +3,11 @@
 #include "VirtualMachine.h"
 #include "SDL2Engine.h"
 
-int main(int argc, char* argv[]){
+std::string romPath;
+uint16_t scale;
+uint16_t emulatorClock;
 
+void parse_args(int argc, char* argv[]){
     argparse::ArgumentParser program("Chip8", "1.0");
 
     program.add_argument("ROM_PATH")
@@ -21,27 +24,27 @@ int main(int argc, char* argv[]){
         .default_value(500)
         .scan<'i', int>();
 
-
     try {
         program.parse_args(argc, argv);
     } catch (const std::exception& err) {
         std::cerr << err.what() << std::endl;
         std::cerr << program;
-        return 1;
+        exit(1);
     }
 
-    const auto& romPath = program.get<std::string>("ROM_PATH");
-    int scale = program.get<int>("--scale");
-    int clock = program.get<int>("-c");
+    romPath = program.get<std::string>("ROM_PATH");
+    scale = program.get<int>("--scale");
+    emulatorClock = program.get<int>("-c");
+}
 
+void chip8_loop(){
     VirtualMachine vm(romPath);
     SDL2Engine engine(vm, scale);
-    
 
     while(engine.IsRunning()){
         engine.HandleEvents();
 
-        for(int i = 0; i < clock / 60; i++)
+        for(int i = 0; i < emulatorClock / 60; i++)
             if(vm.NotWaitingForInput())
                 vm.ExecuteNextInstruction();
         
@@ -51,6 +54,11 @@ int main(int argc, char* argv[]){
         engine.Render();
         engine.Sync();
     }
+}
 
+
+int main(int argc, char* argv[]){
+    parse_args(argc, argv);
+    chip8_loop();
     return 0;
 }
