@@ -14,7 +14,8 @@ public:
         : scale(scale), vm(vm) {}
     virtual void HandleEvents() = 0;
     virtual void Render() = 0;
-    virtual void Sync() = 0;
+    virtual void PrepareSync() = 0;
+    virtual void DoSync() = 0;
     virtual bool IsRunning() = 0;
     virtual ~GraphicEngine() = default;
 };

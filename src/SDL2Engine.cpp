@@ -1,7 +1,7 @@
 #include "SDL2Engine.h"
 
-SDL2Engine::SDL2Engine(VirtualMachine &vm, uint8_t scale)
-    : GraphicEngine(vm, scale)
+SDL2Engine::SDL2Engine(VirtualMachine &vm, uint8_t scale, uint16_t frameRate)
+    : ticksPerFrame(1000 / frameRate), GraphicEngine(vm, scale)
 {
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -83,8 +83,14 @@ void SDL2Engine::Render(){
     SDL_RenderPresent(renderer);
 }
 
-void SDL2Engine::Sync(){
-    SDL_Delay(8);  // ~30 FPS
+void SDL2Engine::PrepareSync(){
+    lastFrameTime = SDL_GetTicks();
+}
+
+void SDL2Engine::DoSync(){
+    Uint32 elapsedTicks = SDL_GetTicks() - lastFrameTime;
+    if(elapsedTicks < ticksPerFrame)
+        SDL_Delay(ticksPerFrame - elapsedTicks);
 }
 
 bool SDL2Engine::IsRunning(){ return isRunning; }

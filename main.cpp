@@ -1,11 +1,26 @@
-#include <argparse/argparse.hpp>
 #include <iostream>
+#include <argparse/argparse.hpp>
 #include "VirtualMachine.h"
 #include "SDL2Engine.h"
 
+#define FRAME_RATE 60
+
+VirtualMachine* vm;
+GraphicEngine* engine;
+
 std::string romPath;
 uint16_t scale;
-uint16_t emulatorClock;
+uint16_t instructionsPerFrame;
+
+void parse_args(int argc, char* argv[]);
+void chip8_loop();
+void frame_tick();
+
+int main(int argc, char* argv[]){
+    parse_args(argc, argv);
+    chip8_loop();
+    return 0;
+}
 
 void parse_args(int argc, char* argv[]){
     argparse::ArgumentParser program("Chip8", "1.0");
@@ -34,31 +49,27 @@ void parse_args(int argc, char* argv[]){
 
     romPath = program.get<std::string>("ROM_PATH");
     scale = program.get<int>("--scale");
-    emulatorClock = program.get<int>("-c");
+    instructionsPerFrame = program.get<int>("-c") / 60;
+
+    vm = new VirtualMachine(romPath);
+    engine = new SDL2Engine(*vm, scale, FRAME_RATE);
 }
 
 void chip8_loop(){
-    VirtualMachine vm(romPath);
-    SDL2Engine engine(vm, scale);
-
-    while(engine.IsRunning()){
-        engine.HandleEvents();
-
-        for(int i = 0; i < emulatorClock / 60; i++)
-            if(vm.NotWaitingForInput())
-                vm.ExecuteNextInstruction();
-        
-        vm.delayTimer.Update();
-        vm.soundTimer.Update();
-
-        engine.Render();
-        engine.Sync();
+    while(engine->IsRunning()){
+        engine->PrepareSync();
+        frame_tick();
+        engine->DoSync();
     }
 }
 
+void frame_tick(){
+    engine->HandleEvents();
 
-int main(int argc, char* argv[]){
-    parse_args(argc, argv);
-    chip8_loop();
-    return 0;
+    for(int i = 0; i < instructionsPerFrame; i++)
+        if(vm->NotWaitingForInput())
+            vm->ExecuteNextInstruction();
+    
+    vm->DecrementTimers();
+    engine->Render();
 }

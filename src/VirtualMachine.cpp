@@ -23,7 +23,6 @@ std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
 }
 
 void VirtualMachine::ExecuteNextInstruction(){
-    if(waitingForInput) return;
     uint16_t address = programCounter.GetAddress();
     OpCode opCode(mem.FetchInstruction(address));
     programCounter.IncrementAddress();
@@ -31,7 +30,6 @@ void VirtualMachine::ExecuteNextInstruction(){
 }
 
 void VirtualMachine::Execute(const OpCode& opCode){
-    if(waitingForInput) return;
     uint16_t address = programCounter.GetAddress();
     auto inst = decoder.Decode(opCode);
     if(inst)
@@ -69,6 +67,11 @@ void VirtualMachine::WaitForInput(OnInputReceived callback){
 }
 
 bool VirtualMachine::NotWaitingForInput() const{ return !waitingForInput; }
+
+void VirtualMachine::DecrementTimers(){
+    delayTimer.Decrement();
+    soundTimer.Decrement();
+}
 
 void VirtualMachine::InputReceived(uint8_t key){
     waitingForInput = false;

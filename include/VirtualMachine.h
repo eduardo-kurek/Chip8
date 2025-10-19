@@ -41,5 +41,6 @@ public:
     void ReleaseKey(uint8_t key);
     void WaitForInput(OnInputReceived callback);
     bool NotWaitingForInput() const;
+    void DecrementTimers();
     friend std::ostream& operator<<(std::ostream& os, const VirtualMachine& vm);
 };

@@ -13,6 +13,8 @@ private:
     SDL_Texture* texture;
     SDL_Event event;
     bool isRunning = true;
+    Uint32 ticksPerFrame;
+    Uint32 lastFrameTime = 0;
     
 
     const std::unordered_map<SDL_KeyCode, uint8_t> keyMap = {
@@ -29,10 +31,11 @@ private:
     std::optional<uint8_t> GetCurrentKey() const;
     
 public:
-    SDL2Engine(VirtualMachine& vm, uint8_t scale);
+    SDL2Engine(VirtualMachine& vm, uint8_t scale, uint16_t frameRate);
     virtual void HandleEvents() override;
     virtual void Render() override;
-    virtual void Sync() override;
+    virtual void PrepareSync() override;
+    virtual void DoSync() override;
     virtual bool IsRunning() override;
     ~SDL2Engine() override;
 };
