@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iomanip>
 #include <cstdio>
+#include <cstdlib>
+#include <ctime>
 
 std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     os << "Virtual Machine State:\n";
@@ -22,7 +24,13 @@ std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     return os;
 }
 
-void VirtualMachine::ExecuteNextInstruction(){
+VirtualMachine::VirtualMachine(std::string romPath)
+    : mem(romPath), decoder(Decoder::Instance()) {
+    std::srand(std::time(0));
+}
+
+void VirtualMachine::ExecuteNextInstruction()
+{
     uint16_t address = programCounter.GetAddress();
     OpCode opCode(mem.FetchInstruction(address));
     programCounter.IncrementAddress();
