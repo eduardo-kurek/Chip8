@@ -7,7 +7,7 @@ Por sua simplicidade e arquitetura bem definida, a implementação de um interpr
 - Compilador C++20 ou superior;
 - CMake 3.10 ou superior;
 - Makefile;
-- SDL2 é opcional estar instalada. Caso o CMake não a encontre, ele a compilará;
+- SDL2 instalada no sistema. Caso o CMake não a encontre, você pode editar o arquivo `CMakeLists.txt` e fornecer o caminho correto da SDL, ou deixar o CMake a compilar do zero a partir do submódulo (external/SDL);
 - A biblioteca `argparse` está sendo utilizada para tratar os argumentos do programa. O CMake também faz a inclusão dela automaticamente.
 
 # Compilação
