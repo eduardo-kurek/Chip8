@@ -3,7 +3,7 @@
 #include <cstdio>
 
 void JMP::DoExecute(VirtualMachine& vm) const{
-    vm.programCounter.SetAddress(opCode.NNN());
+    vm.pc = opCode.NNN();
 }
 
 std::string JMP::GetName() const{ return "JMP"; }

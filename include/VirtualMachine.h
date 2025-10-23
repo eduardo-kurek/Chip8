@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
-#include "PC.h"     
+#include "ProgramCounter.h"     
 #include "Display.h"
 #include "Memory.h"
 #include <string>
@@ -23,7 +23,7 @@ private:
 public:
     std::array<uint8_t, 16> V{};
     uint16_t I = 0x0000;
-    PC programCounter;
+    ProgramCounter pc;
     std::array<uint16_t, 16> stack{};
     uint8_t stackPointer = 0x00;
     std::array<bool, 16> keys;

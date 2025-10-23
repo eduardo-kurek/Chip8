@@ -4,7 +4,7 @@
 
 void SNE_N::DoExecute(VirtualMachine& vm) const{
     if (vm.V[opCode.X()] != opCode.NN())
-        vm.programCounter.IncrementAddress();
+        vm.pc++;
 }
 
 std::string SNE_N::GetName() const{ return "SNE_N"; }

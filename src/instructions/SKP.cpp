@@ -7,7 +7,7 @@ void SKP::DoExecute(VirtualMachine& vm) const{
     auto vx = vm.V[x];
     auto key = vm.keys[vx];
     if(key)
-        vm.programCounter.IncrementAddress();
+        vm.pc++;
 }
 
 std::string SKP::GetName() const{ return "SKP"; }

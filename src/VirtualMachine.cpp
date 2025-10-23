@@ -11,7 +11,7 @@
 
 std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     os << "Virtual Machine State:\n";
-    os << "PC: " << std::hex << vm.programCounter.GetAddress() << "\n";
+    os << "PC: " << std::hex << vm.pc << "\n";
     os << "I: " << std::hex << vm.I << "\n";
     os << "Registers: ";
     for(int i = 0; i < vm.V.size(); ++i)
@@ -29,16 +29,14 @@ VirtualMachine::VirtualMachine(std::string romPath)
     std::srand(std::time(0));
 }
 
-void VirtualMachine::ExecuteNextInstruction()
-{
-    uint16_t address = programCounter.GetAddress();
-    OpCode opCode(mem.FetchInstruction(address));
-    programCounter.IncrementAddress();
-    Execute(std::move(opCode));
+void VirtualMachine::ExecuteNextInstruction(){
+    uint16_t nextInstruction = mem.FetchInstruction(pc++);
+    OpCode opCode(nextInstruction);
+    Execute(opCode);
 }
 
 void VirtualMachine::Execute(const OpCode& opCode){
-    uint16_t address = programCounter.GetAddress();
+    uint16_t address = pc;
     auto inst = decoder.Decode(opCode);
     if(inst)
         inst->Execute(*this);
@@ -70,7 +68,7 @@ void VirtualMachine::ReleaseKey(uint8_t key){
 }
 
 void VirtualMachine::WaitForInput(OnInputReceived callback){
-    waitingForInput = true;
+    this->waitingForInput = true;
     this->callback = callback;
 }
 

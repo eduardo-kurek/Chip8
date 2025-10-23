@@ -7,7 +7,7 @@ void SKPN::DoExecute(VirtualMachine& vm) const{
     auto vx = vm.V[x];
     auto key = vm.keys[vx];
     if(!key)
-        vm.programCounter.IncrementAddress();
+        vm.pc++;
 }
 
 std::string SKPN::GetName() const{ return "SKPN"; }

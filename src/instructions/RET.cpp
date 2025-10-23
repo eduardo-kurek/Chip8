@@ -4,7 +4,7 @@
 
 void RET::DoExecute(VirtualMachine& vm) const{
     vm.stackPointer--;
-    vm.programCounter.SetAddress(vm.stack[vm.stackPointer]);
+    vm.pc = vm.stack[vm.stackPointer];
 }
 
 std::string RET::GetName() const{ return "RET"; }
