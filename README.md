@@ -51,7 +51,7 @@ O teclado do emulador está mapeado para a seguinte configuraçao:
 | **B** | `C` |
 | **F** | `V` |
 
-# Créditos
+# Referências
 - Artigo de especificaçao que nos baseamos: [
 Guide to making a CHIP-8 emulator](https://tobiasvl.github.io/blog/write-a-chip-8-emulator/). Esse artigo se demonstrou mais preciso e detalhista nas especificaçoes do Chip8;
 
