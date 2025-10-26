@@ -55,7 +55,7 @@ void parse_args(int argc, char* argv[]){
 
     romPath = program.get<std::string>("ROM_PATH");
     scale = program.get<int>("--scale");
-    instructionsPerFrame = program.get<int>("-c") / 60;
+    instructionsPerFrame = program.get<int>("-c") / FRAME_RATE;
     initAddress = program.get<int>("-a"); 
 
     vm = new VirtualMachine(romPath, initAddress);
