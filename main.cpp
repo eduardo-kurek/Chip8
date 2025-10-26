@@ -20,7 +20,6 @@ void frame_tick();
 int main(int argc, char* argv[]){
     parse_args(argc, argv);
     chip8_loop();
-    return 0;
 }
 
 void parse_args(int argc, char* argv[]){
@@ -41,7 +40,7 @@ void parse_args(int argc, char* argv[]){
         .scan<'i', int>();
     
     program.add_argument("-a", "--address")
-        .help("Address to where the PC will start")
+        .help("Address to where the PC will start. This might break sprites rendering, be careful")
         .default_value(0x200)
         .scan<'i', int>();
 
@@ -59,7 +58,15 @@ void parse_args(int argc, char* argv[]){
     initAddress = program.get<int>("-a"); 
 
     vm = new VirtualMachine(romPath, initAddress);
-    engine = new SDL2Engine(*vm, scale, FRAME_RATE);
+    engine = new SDL2Engine(*vm, scale, FRAME_RATE, romPath);
+
+    vm->OnStartAudio([engine](){
+        engine->PlaySound();
+    });
+
+    vm->OnPauseAudio([engine](){
+        engine->PauseSound();
+    });
 }
 
 void chip8_loop(){

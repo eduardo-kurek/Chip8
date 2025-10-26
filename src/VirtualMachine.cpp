@@ -68,8 +68,16 @@ void VirtualMachine::ReleaseKey(uint8_t key){
 }
 
 void VirtualMachine::WaitForInput(OnInputReceived callback){
-    this->waitingForInput = true;
-    this->callback = callback;
+    waitingForInput = true;
+    onInputReceived = callback;
+}
+
+void VirtualMachine::OnStartAudio(OnSoundEvent callback){
+    onStartAudio = callback;
+}
+
+void VirtualMachine::OnPauseAudio(OnSoundEvent callback){
+    onPauseAudio = callback;
 }
 
 bool VirtualMachine::NotWaitingForInput() const{ return !waitingForInput; }
@@ -77,11 +85,26 @@ bool VirtualMachine::NotWaitingForInput() const{ return !waitingForInput; }
 void VirtualMachine::DecrementTimers(){
     delayTimer.Decrement();
     soundTimer.Decrement();
+
+    if(soundTimer.GetValue() == 0){
+        if(soundIsPlaying){
+            soundIsPlaying = false;
+            if(onPauseAudio)
+                onPauseAudio();
+        }
+    }
+    else{
+        if(!soundIsPlaying){
+            soundIsPlaying = true;
+            if(onStartAudio)
+                onStartAudio();
+        }
+    }
 }
 
 void VirtualMachine::InputReceived(uint8_t key){
     waitingForInput = false;
-    if(callback)
-        callback(key);
-    callback = nullptr;
+    if(onInputReceived)
+        onInputReceived(key);
+    onInputReceived = nullptr;
 }

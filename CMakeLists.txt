@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB_RECURSE SOURCES "src/**.cpp")
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
+target_compile_options(${PROJECT_NAME} PRIVATE -w)
 target_include_directories(${PROJECT_NAME} PRIVATE include src)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -29,10 +30,8 @@ else()
         target_compile_definitions(${PROJECT_NAME} PRIVATE SDL_MAIN_HANDLED)
         target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main SDL2-static)
     else()
-        message(STATUS "Compilando para Linux/Unix")
         target_link_libraries(${PROJECT_NAME} PRIVATE SDL2-static)
     endif()
-    
 endif()
 
 file(COPY ${CMAKE_SOURCE_DIR}/roms DESTINATION ${CMAKE_BINARY_DIR})

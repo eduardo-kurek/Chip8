@@ -14,10 +14,15 @@
 class VirtualMachine {
 public:
     using OnInputReceived = std::function<void(uint8_t)>;
+    using OnSoundEvent = std::function<void()>;
 
 private:
-    OnInputReceived callback = nullptr;
+    OnInputReceived onInputReceived = nullptr;
+    OnSoundEvent onStartAudio = nullptr;
+    OnSoundEvent onPauseAudio = nullptr;
+
     bool waitingForInput = false;
+    bool soundIsPlaying = false;
     void InputReceived(uint8_t key);
 
 public:
@@ -40,6 +45,8 @@ public:
     void PressKey(uint8_t key);
     void ReleaseKey(uint8_t key);
     void WaitForInput(OnInputReceived callback);
+    void OnStartAudio(OnSoundEvent callback);
+    void OnPauseAudio(OnSoundEvent callback);
     bool NotWaitingForInput() const;
     void DecrementTimers();
     friend std::ostream& operator<<(std::ostream& os, const VirtualMachine& vm);
