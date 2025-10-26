@@ -34,7 +34,7 @@ public:
     Timer delayTimer;
     Timer soundTimer;
     
-    VirtualMachine(std::string romPath);
+    VirtualMachine(std::string romPath, uint16_t initAddress);
     void ExecuteNextInstruction();
     void Execute(const OpCode& opCode);
     void PressKey(uint8_t key);

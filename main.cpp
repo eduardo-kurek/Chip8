@@ -11,6 +11,7 @@ GraphicEngine* engine;
 std::string romPath;
 uint16_t scale;
 uint16_t instructionsPerFrame;
+uint16_t initAddress;
 
 void parse_args(int argc, char* argv[]);
 void chip8_loop();
@@ -38,6 +39,11 @@ void parse_args(int argc, char* argv[]){
         .help("Amount of instructions the program will run each second")
         .default_value(500)
         .scan<'i', int>();
+    
+    program.add_argument("-a", "--address")
+        .help("Address to where the PC will start")
+        .default_value(0x200)
+        .scan<'i', int>();
 
     try {
         program.parse_args(argc, argv);
@@ -50,8 +56,9 @@ void parse_args(int argc, char* argv[]){
     romPath = program.get<std::string>("ROM_PATH");
     scale = program.get<int>("--scale");
     instructionsPerFrame = program.get<int>("-c") / 60;
+    initAddress = program.get<int>("-a"); 
 
-    vm = new VirtualMachine(romPath);
+    vm = new VirtualMachine(romPath, initAddress);
     engine = new SDL2Engine(*vm, scale, FRAME_RATE);
 }
 

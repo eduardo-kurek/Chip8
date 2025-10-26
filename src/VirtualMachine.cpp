@@ -24,8 +24,8 @@ std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     return os;
 }
 
-VirtualMachine::VirtualMachine(std::string romPath)
-    : mem(romPath), decoder(Decoder::Instance()) {
+VirtualMachine::VirtualMachine(std::string romPath, uint16_t initAddress)
+    : mem(romPath), pc(initAddress), decoder(Decoder::Instance()) {
     std::srand(std::time(0));
 }
 
