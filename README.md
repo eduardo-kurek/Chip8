@@ -66,7 +66,7 @@ Guide to making a CHIP-8 emulator](https://tobiasvl.github.io/blog/write-a-chip-
 
 - Utilizamos o repositório [chip8-test-suite](https://github.com/Timendus/chip8-test-suite) para realizar os testes das instruções implementadas. Foi de imensa ajuda, e sem as roms de teste, não conseguiriamos identificar os problemas e progredir no emulador;
 
-- Link para o pack de rom dos jogos: [c8games](ttps://www.zophar.net/pdroms/chip8/chip-8-games-pack.html).
+- Link para o pack de rom dos jogos: [c8games](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html).
 
 # Autores
 BCC6002 - Aspectos De Linguagens De Programação | UTFPR-CM | 2025/1
