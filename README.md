@@ -32,7 +32,7 @@ Optional arguments:
   -a, --address  Address to where the PC will start. This might break sprites rendering, be careful [nargs=0..1] [default: 512]
 ```
 
-Exemplo para rodar o Chipp8 com uma rom:
+Exemplo para rodar o Chip8 com uma rom:
 
 ```sh
 ./Chip8 roms/c8games/MAZE -c 1000 -s 10
