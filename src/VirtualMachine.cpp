@@ -53,18 +53,18 @@ void VirtualMachine::PressKey(uint8_t key){
         std::cout << "Key pressed: " << (int)key << std::endl;
     #endif
     keys[key] = true;
-
-    if(waitingForInput)
-        InputReceived(key);
 }
 
 void VirtualMachine::ReleaseKey(uint8_t key){
     if(key > 15)
-        throw std::out_of_range("Key out of range");
+    throw std::out_of_range("Key out of range");
     #ifdef DEBUG
-        std::cout << "Key released: " << (int)key << std::endl;
+    std::cout << "Key released: " << (int)key << std::endl;
     #endif
     keys[key] = false;
+    
+    if(waitingForInput)
+        InputReceived(key);
 }
 
 void VirtualMachine::WaitForInput(OnInputReceived callback){

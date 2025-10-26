@@ -71,12 +71,12 @@ void chip8_loop(){
 }
 
 void frame_tick(){
+    vm->DecrementTimers();
     engine->HandleEvents();
 
     for(int i = 0; i < instructionsPerFrame; i++)
         if(vm->NotWaitingForInput())
             vm->ExecuteNextInstruction();
     
-    vm->DecrementTimers();
     engine->Render();
 }
