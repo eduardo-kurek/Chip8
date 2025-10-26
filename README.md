@@ -11,7 +11,9 @@ Por sua simplicidade e arquitetura bem definida, a implementação de um interpr
 - A biblioteca `argparse` está sendo utilizada para tratar os argumentos do programa. O CMake também faz a inclusão dela automaticamente.
 
 # Compilação
-Para compilar o código, use o comando `cmake --preset debub|release` na pasta raiz do projeto. Você pode escolher se quer compilar em modo debug ou release. Após isso, será criado uma basta do build com o nome `build/{CMAKE_BUILD_TYPE}`, entre nela e execute o comando `make`. Todos os arquivos serão compilados e o executável terá o nome `Chip8`.
+Lembre de clonar o repositório com `--recursive` para clonar os submódulos necessários para a compilação funcionar como esperado.
+
+Para compilar o código, use o comando `cmake --preset debug|release` na pasta raiz do projeto. Você pode escolher se quer compilar em modo debug ou release. Após isso, será criado uma pasta do build com o nome `build/{CMAKE_BUILD_TYPE}`, entre nela e execute o comando `make`. Todos os arquivos serão compilados e o executável terá o nome `Chip8`.
 
 # Uso
 Pode se executar `./Chip8 -h` para ver as opções, e as seguintes informações serão dispostas na tela:
@@ -33,7 +35,7 @@ Optional arguments:
 Exemplo para rodar o Chipp8 com uma rom:
 
 ```sh
-./Chip8 roms/c8games/MAZE -c 1000 --s 10
+./Chip8 roms/c8games/MAZE -c 1000 -s 10
 ```
 
 É necessário informar a rom do programa a ser executado pelo emulador. Na pasta do build terá um diretório `roms` com vários programas disponíveis para teste.
