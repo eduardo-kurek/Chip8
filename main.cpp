@@ -11,6 +11,7 @@ GraphicEngine* engine;
 std::string romPath;
 uint16_t scale;
 uint16_t instructionsPerFrame;
+uint16_t initAddress;
 
 void parse_args(int argc, char* argv[]);
 void chip8_loop();
@@ -19,7 +20,6 @@ void frame_tick();
 int main(int argc, char* argv[]){
     parse_args(argc, argv);
     chip8_loop();
-    return 0;
 }
 
 void parse_args(int argc, char* argv[]){
@@ -38,6 +38,11 @@ void parse_args(int argc, char* argv[]){
         .help("Amount of instructions the program will run each second")
         .default_value(500)
         .scan<'i', int>();
+    
+    program.add_argument("-a", "--address")
+        .help("Address to where the PC will start. This might break sprites rendering, be careful")
+        .default_value(0x200)
+        .scan<'i', int>();
 
     try {
         program.parse_args(argc, argv);
@@ -49,10 +54,19 @@ void parse_args(int argc, char* argv[]){
 
     romPath = program.get<std::string>("ROM_PATH");
     scale = program.get<int>("--scale");
-    instructionsPerFrame = program.get<int>("-c") / 60;
+    instructionsPerFrame = program.get<int>("-c") / FRAME_RATE;
+    initAddress = program.get<int>("-a"); 
 
-    vm = new VirtualMachine(romPath);
-    engine = new SDL2Engine(*vm, scale, FRAME_RATE);
+    vm = new VirtualMachine(romPath, initAddress);
+    engine = new SDL2Engine(*vm, scale, FRAME_RATE, romPath);
+
+    vm->OnStartAudio([engine](){
+        engine->PlaySound();
+    });
+
+    vm->OnPauseAudio([engine](){
+        engine->PauseSound();
+    });
 }
 
 void chip8_loop(){
@@ -64,12 +78,12 @@ void chip8_loop(){
 }
 
 void frame_tick(){
+    vm->DecrementTimers();
     engine->HandleEvents();
 
     for(int i = 0; i < instructionsPerFrame; i++)
         if(vm->NotWaitingForInput())
             vm->ExecuteNextInstruction();
     
-    vm->DecrementTimers();
     engine->Render();
 }

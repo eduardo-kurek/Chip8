@@ -17,5 +17,7 @@ public:
     virtual void PrepareSync() = 0;
     virtual void DoSync() = 0;
     virtual bool IsRunning() = 0;
+    virtual void PlaySound() = 0;
+    virtual void PauseSound() = 0;
     virtual ~GraphicEngine() = default;
 };

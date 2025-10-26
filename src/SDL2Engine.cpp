@@ -1,12 +1,51 @@
 #include "SDL2Engine.h"
+#include <cmath>
 
-SDL2Engine::SDL2Engine(VirtualMachine &vm, uint8_t scale, uint16_t frameRate)
+static double g_audio_phase = 0.0;
+
+void SDL2Engine::AudioCallback(void* userdata, Uint8* stream, int len) {
+    Sint16* buffer = (Sint16*)stream;
+    int samples_to_generate = len / (sizeof(Sint16) * CHANNELS);
+    const double phase_increment = (double)BEEP_FREQUENCY * 2.0 * M_PI / (double)AUDIO_FREQ;
+    
+    for (int i = 0; i < samples_to_generate; ++i) {
+        Sint16 sample_value = 0;
+        
+        if(std::sin(g_audio_phase) > 0.0)
+            sample_value = 3000;
+        else
+            sample_value = -3000;
+
+        *buffer++ = sample_value;
+        *buffer++ = sample_value; 
+
+        g_audio_phase += phase_increment;
+        
+        if (g_audio_phase >= (2.0 * M_PI)) {
+            g_audio_phase -= (2.0 * M_PI);
+        }
+    }
+}
+
+SDL2Engine::SDL2Engine(VirtualMachine &vm, uint8_t scale, uint16_t frameRate, std::string romName)
     : ticksPerFrame(1000 / frameRate), GraphicEngine(vm, scale)
 {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
+    SDL_AudioSpec audioSpec = {
+        AUDIO_FREQ, AUDIO_S16, CHANNELS, 0, SAMPLES, 0, 0, AudioCallback, NULL
+    };
+    
+    audioDevice = SDL_OpenAudioDevice(NULL, 0, &audioSpec, NULL, 0);
+    if(audioDevice == 0){
+        std::string msg = "Failed to open audio device: ";
+        std::string sdlError = SDL_GetError();
+        throw std::runtime_error(msg + sdlError);
+    }
+
+    std::string windowTitle = "Chip8   -   " + romName;
     window = SDL_CreateWindow(
-        "Chip8 Framebuffer",
+        windowTitle.c_str(),
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         vm.display.WIDTH * scale, vm.display.HEIGHT * scale,
         SDL_WINDOW_SHOWN
@@ -95,7 +134,16 @@ void SDL2Engine::DoSync(){
 
 bool SDL2Engine::IsRunning(){ return isRunning; }
 
+void SDL2Engine::PlaySound(){
+    SDL_PauseAudioDevice(audioDevice, 0);
+}
+
+void SDL2Engine::PauseSound(){
+    SDL_PauseAudioDevice(audioDevice, 1);
+}
+
 SDL2Engine::~SDL2Engine(){
+    SDL_CloseAudioDevice(audioDevice);
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

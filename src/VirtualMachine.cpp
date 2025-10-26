@@ -24,8 +24,8 @@ std::ostream &operator<<(std::ostream& os, const VirtualMachine& vm){
     return os;
 }
 
-VirtualMachine::VirtualMachine(std::string romPath)
-    : mem(romPath), decoder(Decoder::Instance()) {
+VirtualMachine::VirtualMachine(std::string romPath, uint16_t initAddress)
+    : mem(romPath), pc(initAddress), decoder(Decoder::Instance()) {
     std::srand(std::time(0));
 }
 
@@ -53,23 +53,31 @@ void VirtualMachine::PressKey(uint8_t key){
         std::cout << "Key pressed: " << (int)key << std::endl;
     #endif
     keys[key] = true;
-
-    if(waitingForInput)
-        InputReceived(key);
 }
 
 void VirtualMachine::ReleaseKey(uint8_t key){
     if(key > 15)
-        throw std::out_of_range("Key out of range");
+    throw std::out_of_range("Key out of range");
     #ifdef DEBUG
-        std::cout << "Key released: " << (int)key << std::endl;
+    std::cout << "Key released: " << (int)key << std::endl;
     #endif
     keys[key] = false;
+    
+    if(waitingForInput)
+        InputReceived(key);
 }
 
 void VirtualMachine::WaitForInput(OnInputReceived callback){
-    this->waitingForInput = true;
-    this->callback = callback;
+    waitingForInput = true;
+    onInputReceived = callback;
+}
+
+void VirtualMachine::OnStartAudio(OnSoundEvent callback){
+    onStartAudio = callback;
+}
+
+void VirtualMachine::OnPauseAudio(OnSoundEvent callback){
+    onPauseAudio = callback;
 }
 
 bool VirtualMachine::NotWaitingForInput() const{ return !waitingForInput; }
@@ -77,11 +85,26 @@ bool VirtualMachine::NotWaitingForInput() const{ return !waitingForInput; }
 void VirtualMachine::DecrementTimers(){
     delayTimer.Decrement();
     soundTimer.Decrement();
+
+    if(soundTimer.GetValue() == 0){
+        if(soundIsPlaying){
+            soundIsPlaying = false;
+            if(onPauseAudio)
+                onPauseAudio();
+        }
+    }
+    else{
+        if(!soundIsPlaying){
+            soundIsPlaying = true;
+            if(onStartAudio)
+                onStartAudio();
+        }
+    }
 }
 
 void VirtualMachine::InputReceived(uint8_t key){
     waitingForInput = false;
-    if(callback)
-        callback(key);
-    callback = nullptr;
+    if(onInputReceived)
+        onInputReceived(key);
+    onInputReceived = nullptr;
 }
