@@ -69,6 +69,6 @@ Guide to making a CHIP-8 emulator](https://tobiasvl.github.io/blog/write-a-chip-
 - Link para o pack de rom dos jogos: [c8games](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html).
 
 # Autores
-BCC6002 - Aspectos De Linguagens De Programação | UTFPR-CM | 2025/1
+BCC6002 - Aspectos De Linguagens De Programação | UTFPR-CM | 2025/2
 
 **Eduardo Kurek & Vinicius Kurek**
